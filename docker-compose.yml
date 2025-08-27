@@ -1,0 +1,44 @@
+version: "3.9"
+
+networks:
+  crediya:
+
+volumes:
+  pgdata_solicitudes:
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: pg-solicitudes
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: solicitudes
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      TZ: America/Bogota
+    ports:
+      - "5432:5432"
+    networks:
+      - crediya
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d solicitudes"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - pgdata_solicitudes:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d  # scripts iniciales opcional
+
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      TZ: America/Bogota
+    ports:
+      - "5050:80"
+    networks:
+      - crediya
