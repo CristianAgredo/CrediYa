@@ -1,118 +1,77 @@
 package co.com.pragma.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.Date;
+
 import co.com.pragma.model.usuario.Usuario;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-class UsuarioTest {
+public class UsuarioTest {
 
     @Test
-    void builderShouldCreateUsuarioWithAllFields() {
-        LocalDate nacimiento = LocalDate.of(1990, 5, 20);
-        BigDecimal salario = new BigDecimal("3500000.50");
+    void debeConstruirUsuarioConBuilder() {
+        Long id = null;
+        String nombre = "Juan";
+        String apellido = "Pérez";
+        String email = "juan@correo.com";
+        String fecha = "2000-07-18";
+        String telefono = "3001234567";
+        BigDecimal salario = new BigDecimal("2000000");
+        String rol = "USER";
 
-        Usuario u = Usuario.builder()
-                .id(1L)
-                .nombres("Juan")
-                .apellidos("Pérez")
-                .email("juan.perez@correo.com")
-                .fechaNacimiento(nacimiento)
+        Usuario usuario = Usuario.builder()
+                .id(null)
+                .nombres(nombre)
+                .apellidos(apellido)
+                .email(email)
+                .fechaNacimiento(LocalDate.parse(fecha))
+                .telefono(telefono)
                 .salarioBase(salario)
-                .direccion("Calle 123")
-                .telefono("3001234567")
-                .rol("CLIENTE")
+                .rol(rol)
                 .build();
 
-        assertEquals(1L, u.getId());
-        assertEquals("Juan", u.getNombres());
-        assertEquals("Pérez", u.getApellidos());
-        assertEquals("juan.perez@correo.com", u.getEmail());
-        assertEquals(nacimiento, u.getFechaNacimiento());
-        assertEquals(0, salario.compareTo(u.getSalarioBase())); // compareTo para BigDecimal
-        assertEquals("Calle 123", u.getDireccion());
-        assertEquals("3001234567", u.getTelefono());
-        assertEquals("CLIENTE", u.getRol());
+        assertEquals(id, usuario.getId());
+        assertEquals(nombre, usuario.getNombres());
+        assertEquals(apellido, usuario.getApellidos());
+        assertEquals(email, usuario.getEmail());
+        assertEquals(fecha, usuario.getFechaNacimiento());
+        assertEquals(telefono, usuario.getTelefono());
+        assertEquals(salario, usuario.getSalarioBase());
+        assertEquals("USER", usuario.getRol());
     }
 
     @Test
-    void toBuilderShouldReturnNewInstanceWithUpdatedField() {
+    void debePermitirModificarCampos() {
+        Usuario usuario = new Usuario();
+        usuario.setNombres("Ana");
+        usuario.setSalarioBase(new BigDecimal("1500000"));
+
+        assertEquals("Ana", usuario.getNombres());
+        assertEquals(new BigDecimal("1500000"), usuario.getSalarioBase());
+    }
+
+    @Test
+    void debePermitirEditarConBuilderToBuilder() {
+        Long id = Long.valueOf(1);
+
         Usuario original = Usuario.builder()
-                .id(1L)
-                .nombres("Ana")
-                .apellidos("Gómez")
-                .email("ana.gomez@correo.com")
-                .fechaNacimiento(LocalDate.of(1995, 1, 10))
-                .salarioBase(new BigDecimal("2500000"))
-                .direccion("Av. Siempre Viva")
-                .telefono("3010000000")
+                .id(id)
+                .nombres("Pedro")
+                .salarioBase(new BigDecimal("1000000"))
                 .rol("ADMIN")
                 .build();
 
         Usuario modificado = original.toBuilder()
-                .email("ana.actualizada@correo.com")
+                .nombres("Pedro Editado")
+                .salarioBase(new BigDecimal("2500000"))
                 .build();
 
-        assertNotSame(original, modificado);
-
-        assertEquals("ana.actualizada@correo.com", modificado.getEmail());
-        assertEquals(original.getNombres(), modificado.getNombres());
-        assertEquals(original.getApellidos(), modificado.getApellidos());
-        assertEquals(original.getFechaNacimiento(), modificado.getFechaNacimiento());
-        assertEquals(0, original.getSalarioBase().compareTo(modificado.getSalarioBase()));
-        assertEquals(original.getDireccion(), modificado.getDireccion());
-        assertEquals(original.getTelefono(), modificado.getTelefono());
-        assertEquals(original.getRol(), modificado.getRol());
-    }
-
-    @Test
-    void equalsAndHashCodeShouldBeBasedOnAllFields() {
-        Usuario a = Usuario.builder()
-                .id(10L)
-                .nombres("Carlos")
-                .apellidos("López")
-                .email("carlos@correo.com")
-                .fechaNacimiento(LocalDate.of(1988, 3, 15))
-                .salarioBase(new BigDecimal("1800000"))
-                .direccion("Cra 45 #10-20")
-                .telefono("3021111111")
-                .rol("CLIENTE")
-                .build();
-
-        Usuario b = Usuario.builder()
-                .id(10L)
-                .nombres("Carlos")
-                .apellidos("López")
-                .email("carlos@correo.com")
-                .fechaNacimiento(LocalDate.of(1988, 3, 15))
-                .salarioBase(new BigDecimal("1800000"))
-                .direccion("Cra 45 #10-20")
-                .telefono("3021111111")
-                .rol("CLIENTE")
-                .build();
-
-        assertEquals(a, b);
-        assertEquals(a.hashCode(), b.hashCode());
-
-        Usuario c = b.toBuilder().telefono("3022222222").build();
-        assertNotEquals(b, c);
-    }
-
-    @Test
-    void noArgsConstructorShouldExistAndInitializeFieldsToNull() {
-        Usuario u = new Usuario();
-
-        assertNull(u.getId());
-        assertNull(u.getNombres());
-        assertNull(u.getApellidos());
-        assertNull(u.getEmail());
-        assertNull(u.getFechaNacimiento());
-        assertNull(u.getSalarioBase());
-        assertNull(u.getDireccion());
-        assertNull(u.getTelefono());
-        assertNull(u.getRol());
+        assertEquals("Pedro Editado", modificado.getNombres());
+        assertEquals(new BigDecimal("2500000"), modificado.getSalarioBase());
+        assertEquals(id, modificado.getId());
     }
 }

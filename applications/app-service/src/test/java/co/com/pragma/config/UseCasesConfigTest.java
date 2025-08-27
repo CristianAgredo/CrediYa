@@ -1,45 +1,26 @@
+// applications/app-service/src/test/java/.../UseCasesConfigTest.java
 package co.com.pragma.config;
 
+import co.com.pragma.model.usuario.gateways.UsuarioRepositoryGateway;
+import co.com.pragma.usecase.usuario.RegistrarUsuarioUseCase;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class UseCasesConfigTest {
+@SpringBootTest(classes = UseCasesConfig.class)
+class UseCasesConfigTest {
+
+    @MockBean
+    UsuarioRepositoryGateway gateway; // satisface la dependencia del bean
+
+    @Autowired
+    RegistrarUsuarioUseCase useCase;
 
     @Test
     void testUseCaseBeansExist() {
-        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(TestConfig.class)) {
-            String[] beanNames = context.getBeanDefinitionNames();
-
-            boolean useCaseBeanFound = false;
-            for (String beanName : beanNames) {
-                if (beanName.endsWith("UseCase")) {
-                    useCaseBeanFound = true;
-                    break;
-                }
-            }
-
-            assertTrue(useCaseBeanFound, "No beans ending with 'Use Case' were found");
-        }
-    }
-
-    @Configuration
-    @Import(UseCasesConfig.class)
-    static class TestConfig {
-
-        @Bean
-        public MyUseCase myUseCase() {
-            return new MyUseCase();
-        }
-    }
-
-    static class MyUseCase {
-        public String execute() {
-            return "MyUseCase Test";
-        }
+        assertThat(useCase).isNotNull();
     }
 }
