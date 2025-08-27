@@ -1,14 +1,12 @@
 package co.com.pragma.r2dbc;
 
-import co.com.pragma.r2dbc.helper.ReactiveAdapterOperations;
-import jakarta.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.relational.core.mapping.Table;
-import org.reactivecommons.utils.ObjectMapper;
-import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,12 +19,19 @@ import java.time.LocalDate;
 public class UsuarioData {
     @Id
     private Long id;
+
     private String nombres;
     private String apellidos;
     private String email;
-    private LocalDate fecha_nacimiento;
-    private BigDecimal salario_base;
+
+    @Column("fecha_nacimiento")
+    private LocalDate fechaNacimiento;
+
+    @Column("salario_base")
+    private BigDecimal salarioBase;
+
     private String direccion;
     private String telefono;
     private String rol;
+
 }

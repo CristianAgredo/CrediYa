@@ -1,11 +1,12 @@
 package co.com.pragma.model.usuario;
 
+
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Value
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
