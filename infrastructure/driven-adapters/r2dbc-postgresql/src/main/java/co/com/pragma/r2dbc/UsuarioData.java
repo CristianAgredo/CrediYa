@@ -15,13 +15,14 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table("usuario")
+@Table("usuarios")
 public class UsuarioData {
     @Id
     private Long id;
 
     private String nombres;
     private String apellidos;
+    private String documento;
     private String email;
 
     @Column("fecha_nacimiento")

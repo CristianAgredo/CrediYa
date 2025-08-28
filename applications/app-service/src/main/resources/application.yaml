@@ -22,7 +22,7 @@ logging:
     org.springframework.r2dbc: "INFO"
 springdoc:
   swagger-ui:
-    path: "/docs"
+    path: /swagger-ui.html
 management:
   endpoints:
     web:
@@ -34,3 +34,4 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+

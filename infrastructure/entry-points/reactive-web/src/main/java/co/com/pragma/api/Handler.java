@@ -33,10 +33,9 @@ public class Handler {
             summary = "Crear usuario",
             description = "Registra un nuevo usuario validando reglas de negocio",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Creado",
+                    @ApiResponse(responseCode = "201", description = "Creado",
                             content = @Content(schema = @Schema(implementation = Usuario.class))),
-                    @ApiResponse(responseCode = "400", description = "Datos inválidos"),
-                    @ApiResponse(responseCode = "409", description = "Email existente")
+                    @ApiResponse(responseCode = "400", description = "Datos inválidos o email duplicado")
             }
     )
     public Mono<ServerResponse> crearUsuario(ServerRequest req) {
@@ -48,7 +47,15 @@ public class Handler {
                         .status(HttpStatus.CREATED)
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(u))
-                .onErrorResume(ConstraintViolationException.class, this::badRequest);
+                .onErrorResume(ConstraintViolationException.class, this::badRequest)
+                .onErrorResume(IllegalArgumentException.class, e ->
+                        ServerResponse.badRequest()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValue(e.getMessage()))
+                .onErrorResume(RegistrarUsuarioUseCase.ReglaNegocio.class, e ->
+                        ServerResponse.status(HttpStatus.BAD_REQUEST)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValue(e.getMessage()));
     }
 
     private <T> Mono<T> validate(T body) {
@@ -70,6 +77,7 @@ public class Handler {
                 .nombres(dto.nombres())
                 .apellidos(dto.apellidos())
                 .email(dto.email())
+                .documento(dto.documento())
                 .fechaNacimiento(dto.fechaNacimiento())
                 .salarioBase(dto.salarioBase())
                 .direccion(dto.direccion())
