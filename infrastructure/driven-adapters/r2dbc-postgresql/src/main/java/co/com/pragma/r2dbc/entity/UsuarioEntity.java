@@ -1,4 +1,4 @@
-package co.com.pragma.r2dbc;
+package co.com.pragma.r2dbc.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Table("usuario")
-public class UsuarioData {
+public class UsuarioEntity {
     @Id
     private Long id;
 

@@ -1,7 +1,8 @@
-package co.com.pragma.r2dbc;
+package co.com.pragma.r2dbc.usuario;
 
 import co.com.pragma.model.usuario.Usuario;
 import co.com.pragma.model.usuario.gateways.UsuarioRepositoryGateway;
+import co.com.pragma.r2dbc.entity.UsuarioEntity;
 import lombok.RequiredArgsConstructor;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryGateway {
 
     @Override
     public Mono<Usuario> save(Usuario usuario) {
-        UsuarioData data = mapper.map(usuario, UsuarioData.class);
+        UsuarioEntity data = mapper.map(usuario, UsuarioEntity.class);
         return repository.save(data).map(saved -> mapper.map(saved, Usuario.class));
     }
 }

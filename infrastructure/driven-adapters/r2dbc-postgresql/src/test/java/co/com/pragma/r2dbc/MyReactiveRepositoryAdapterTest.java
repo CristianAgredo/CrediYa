@@ -1,5 +1,7 @@
 package co.com.pragma.r2dbc;
 
+import co.com.pragma.r2dbc.entity.UsuarioEntity;
+import co.com.pragma.r2dbc.usuario.UsuarioReactiveRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,7 +14,7 @@ class MyReactiveRepositoryAdapterTest {
     // TODO: change four you own tests
 
     @InjectMocks
-    UsuarioData repositoryAdapter;
+    UsuarioEntity repositoryAdapter;
 
     @Mock
     UsuarioReactiveRepository repository;
